@@ -1,0 +1,5 @@
+archetype other_contract
+
+view getN () : nat {
+  return 10
+}

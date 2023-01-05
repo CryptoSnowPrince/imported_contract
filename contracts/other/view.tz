@@ -1,8 +1,17 @@
-{ parameter nat ;
-  storage nat ;
-  code
-    { CAR;
-      NIL operation;
-      PAIR; } ;
-  view "getN" unit nat { DROP; PUSH nat 2 } ;
- }
+# Unit
+{
+  storage unit;
+  parameter unit;
+  code { CDR;
+         NIL operation;
+         PAIR };
+  view
+    "getN"
+    unit
+    nat
+    { DROP;
+      UNIT;
+      PUSH nat 10;
+      SWAP;
+      DROP }
+}
