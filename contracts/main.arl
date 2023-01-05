@@ -1,0 +1,10 @@
+archetype main
+
+import other_contract from "./contracts/other/view.tz"
+
+variable res : nat = 0
+
+entry check (a : address) {
+  const v : nat ?= other_contract(a).getN(Unit) : "VIEW_ERROR";
+  res := v
+}
