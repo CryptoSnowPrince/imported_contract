@@ -1,4 +1,4 @@
-archetype main
+archetype main(const val1: nat, const val2: address)
 
 import other_contract from "./contracts/other/view.tz"
 
