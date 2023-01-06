@@ -1,10 +1,27 @@
-archetype main(const val1: nat, const val2: address)
+archetype main(const val1: nat, const val2: address, val3: nat, val4: address)
 
 import other_contract from "./contracts/other/view.tz"
 
-variable res : nat = 0
+variable res : int = 0
+variable res1 : int = 0
 
 entry check (a : address) {
   const v : nat ?= other_contract(a).getN(Unit) : "VIEW_ERROR";
   res := v
+}
+
+entry inc () {
+  res += 1;
+}
+
+entry inc1 () {
+  res1 += 1;
+}
+
+entry dec () {
+  res -= 1;
+}
+
+entry dec1 () {
+  res1 -= 1;
 }
