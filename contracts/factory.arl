@@ -1,0 +1,25 @@
+// owner = caller
+archetype factory(owner: address)
+
+import cake from "./contracts/other/cake.tz"
+
+entry createPool(cooker: address, kind: nat) {
+    effect {
+        const amount : tez = 0tz;
+        const storage_init : (address * address * nat) = (self_address, cooker, kind);
+        const op_addr : (operation * address) = create_contract(cake, none, amount, storage_init);
+        operations := [op_addr[0]];
+    }
+}
+
+entry setOwner(owner_: address) {
+    called by owner
+
+    effect {
+        owner := owner_
+    }
+}
+
+view getOwner(): address {
+    return owner
+}

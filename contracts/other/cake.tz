@@ -1,0 +1,36 @@
+# (Pair factory cooker kind)
+{
+  storage (pair (address %factory) (address %cooker) (nat %kind));
+  parameter unit;
+  code { LAMBDA
+           address
+           bool
+           { PUSH unit Unit;
+             DUP 2;
+             PUSH unit Unit;
+             VIEW "getOwner" address;
+             IF_NONE
+               { PUSH string "VIEW_OWNER_ERR";
+                 FAILWITH }
+               {  };
+             DUP;
+             SENDER;
+             COMPARE;
+             EQ;
+             NOT;
+             IF
+               { PUSH string "ONLY_FACTORY_OWNER_ERR";
+                 FAILWITH }
+               {  };
+             PUSH bool True;
+             DIP { DIG 1; DROP };
+             DUG 1;
+             DROP;
+             DUG 1;
+             DROP };
+         DIG 1;
+         CDR;
+         NIL operation;
+         PAIR;
+         DIP { DROP } };
+}
