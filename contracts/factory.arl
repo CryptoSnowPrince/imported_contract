@@ -6,7 +6,7 @@ import cake from "./contracts/other/cake.tz"
 entry createPool(token: address) {
     effect {
         const amount : tez = 0tz;
-        const storage_init : (address * address * nat * nat) = (self_address, token, 0, 0);
+        const storage_init : (address * address * nat * nat * int) = (self_address, token, 0, 0, 0);
         const op_addr : (operation * address) = create_contract(cake, none, amount, storage_init);
         operations := [op_addr[0]];
     }
