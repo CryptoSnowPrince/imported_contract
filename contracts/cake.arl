@@ -1,7 +1,24 @@
-archetype cake(factory: address, cooker: address, kind: nat)
+archetype cake(factory: address, token: address, tokenBalBefore: nat, tokenBalAfter: nat)
 
 function onlyFactoryOwner(): bool {
     var factoryOwner: address ?= call_view<address>(factory, "getOwner", Unit) : "VIEW_OWNER_ERR";
     do_require(caller = factoryOwner, "ONLY_FACTORY_OWNER_ERR");
     return true
+}
+
+variable delta: int = 0
+
+entry setCurBalBefore(bal: nat) {
+    tokenBalBefore := bal
+}
+
+entry setCurBalAfter(bal: nat) {
+    tokenBalAfter := bal
+}
+
+entry action1(amount: nat) {
+    transfer 0tz to token call getBalance<address * contract<nat>>((self_address, self.setCurBalBefore));
+    transfer 0tz to token call %transfer<address * address * nat>((self_address, caller, amount));
+    transfer 0tz to token call getBalance<address * contract<nat>>((self_address, self.setCurBalAfter));
+    delta := tokenBalBefore - tokenBalAfter
 }

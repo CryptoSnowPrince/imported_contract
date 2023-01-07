@@ -3,10 +3,10 @@ archetype factory(owner: address)
 
 import cake from "./contracts/other/cake.tz"
 
-entry createPool(cooker: address, kind: nat) {
+entry createPool(token: address) {
     effect {
         const amount : tez = 0tz;
-        const storage_init : (address * address * nat) = (self_address, cooker, kind);
+        const storage_init : (address * address * nat * nat) = (self_address, token, 0, 0);
         const op_addr : (operation * address) = create_contract(cake, none, amount, storage_init);
         operations := [op_addr[0]];
     }
