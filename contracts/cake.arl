@@ -1,12 +1,10 @@
-archetype cake(factory: address, token: address, tokenBalBefore: nat, tokenBalAfter: nat)
+archetype cake(factory: address, token: address, tokenBalBefore: nat, tokenBalAfter: nat, delta: int)
 
-function onlyFactoryOwner(): bool {
-    var factoryOwner: address ?= call_view<address>(factory, "getOwner", Unit) : "VIEW_OWNER_ERR";
-    do_require(caller = factoryOwner, "ONLY_FACTORY_OWNER_ERR");
-    return true
-}
-
-variable delta: int = 0
+// function onlyFactoryOwner(): bool {
+//     var factoryOwner: address ?= call_view<address>(factory, "getOwner", Unit) : "VIEW_OWNER_ERR";
+//     do_require(caller = factoryOwner, "ONLY_FACTORY_OWNER_ERR");
+//     return true
+// }
 
 entry setCurBalBefore(bal: nat) {
     tokenBalBefore := bal

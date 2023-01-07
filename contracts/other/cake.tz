@@ -1,35 +1,9 @@
-# (Pair factory token tokenBalBefore tokenBalAfter 0)
+# (Pair factory token tokenBalBefore tokenBalAfter delta)
 {
   storage (pair (address %factory) (address %token) (nat %tokenBalBefore) (nat %tokenBalAfter) (int %delta));
   parameter (or (or (nat %setCurBalBefore) (nat %setCurBalAfter)) (nat %action1));
-  code { LAMBDA
-           address
-           bool
-           { PUSH unit Unit;
-             DUP 2;
-             PUSH unit Unit;
-             VIEW "getOwner" address;
-             IF_NONE
-               { PUSH string "VIEW_OWNER_ERR";
-                 FAILWITH }
-               {  };
-             DUP;
-             SENDER;
-             COMPARE;
-             EQ;
-             NOT;
-             IF
-               { PUSH string "ONLY_FACTORY_OWNER_ERR";
-                 FAILWITH }
-               {  };
-             PUSH bool True;
-             DIP { DIG 1; DROP };
-             DUG 1;
-             DROP;
-             DUG 1;
-             DROP };
-         NIL operation;
-         DIG 2;
+  code { NIL operation;
+         DIG 1;
          UNPAIR;
          DIP { UNPAIR 5 };
          IF_LEFT
@@ -137,7 +111,6 @@
              DROP;
              PAIR 5;
              DIG 1;
-             PAIR };
-         DIP { DROP } };
+             PAIR } };
 }
 
