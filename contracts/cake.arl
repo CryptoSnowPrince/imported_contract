@@ -20,3 +20,34 @@ entry action1(amount: nat) {
     transfer 0tz to token call getBalance<address * contract<nat>>((self_address, self.setCurBalAfter));
     delta := tokenBalBefore - tokenBalAfter
 }
+
+entry action2(amount: nat) {
+    effect {
+        transfer 0tz to entry self.setCurBalBefore(amount);
+        const val = tokenBalBefore + 2;
+        transfer 0tz to entry self.setCurBalAfter(val)
+    }
+}
+
+record Param {
+    val1: int;
+    val2: nat;
+}
+
+function transform(param: Param, val: int): Param {
+    // TODO
+    return param
+}
+
+function call_trans(param: option<Param>, val: bool, val11: bool) : Param * Param {
+    const param_1 ?= param : "ERR";
+    if val11 then begin
+        if val then begin
+            return ((transform(param_1, 1), param_1))
+        end else begin
+            return ((transform(param_1, 0), param_1))
+        end
+    end;
+
+    return ((param_1, param_1))
+}

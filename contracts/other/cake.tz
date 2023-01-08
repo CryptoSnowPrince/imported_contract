@@ -1,7 +1,7 @@
 # (Pair factory token tokenBalBefore tokenBalAfter delta)
 {
   storage (pair (address %factory) (address %token) (nat %tokenBalBefore) (nat %tokenBalAfter) (int %delta));
-  parameter (or (or (nat %setCurBalBefore) (nat %setCurBalAfter)) (nat %action1));
+  parameter (or (or (nat %setCurBalBefore) (nat %setCurBalAfter)) (or (nat %action1) (nat %action2)));
   code { NIL operation;
          DIG 1;
          UNPAIR;
@@ -22,95 +22,141 @@
                  PAIR 5;
                  DIG 1;
                  PAIR } }
-           { NIL operation;
-             NIL operation;
-             DUP 9;
-             ITER { CONS };
-             DUP 5;
-             CONTRACT %getBalance (pair address (contract nat));
-             IF_NONE
-               { PUSH string "getBalance";
-                 PUSH string "ENTRY_NOT_FOUND";
+           { IF_LEFT
+               { NIL operation;
+                 NIL operation;
+                 DUP 9;
+                 ITER { CONS };
+                 DUP 5;
+                 CONTRACT %getBalance (pair address (contract nat));
+                 IF_NONE
+                   { PUSH string "getBalance";
+                     PUSH string "ENTRY_NOT_FOUND";
+                     PAIR;
+                     FAILWITH }
+                   {  };
+                 PUSH mutez 0;
+                 SELF_ADDRESS;
+                 CONTRACT %setCurBalBefore nat;
+                 IF_NONE
+                   { PUSH string "setCurBalBefore";
+                     PUSH string "ENTRY_NOT_FOUND";
+                     PAIR;
+                     FAILWITH }
+                   {  };
+                 SELF_ADDRESS;
                  PAIR;
-                 FAILWITH }
-               {  };
-             PUSH mutez 0;
-             SELF_ADDRESS;
-             CONTRACT %setCurBalBefore nat;
-             IF_NONE
-               { PUSH string "setCurBalBefore";
-                 PUSH string "ENTRY_NOT_FOUND";
+                 TRANSFER_TOKENS;
+                 CONS;
+                 ITER { CONS };
+                 DIP { DIG 6; DROP };
+                 DUG 6;
+                 NIL operation;
+                 NIL operation;
+                 DUP 9;
+                 ITER { CONS };
+                 DUP 5;
+                 CONTRACT %transfer (pair address address nat);
+                 IF_NONE
+                   { PUSH string "transfer";
+                     PUSH string "ENTRY_NOT_FOUND";
+                     PAIR;
+                     FAILWITH }
+                   {  };
+                 PUSH mutez 0;
+                 DUP 5;
+                 SENDER;
                  PAIR;
-                 FAILWITH }
-               {  };
-             SELF_ADDRESS;
-             PAIR;
-             TRANSFER_TOKENS;
-             CONS;
-             ITER { CONS };
-             DIP { DIG 6; DROP };
-             DUG 6;
-             NIL operation;
-             NIL operation;
-             DUP 9;
-             ITER { CONS };
-             DUP 5;
-             CONTRACT %transfer (pair address address nat);
-             IF_NONE
-               { PUSH string "transfer";
-                 PUSH string "ENTRY_NOT_FOUND";
+                 SELF_ADDRESS;
                  PAIR;
-                 FAILWITH }
-               {  };
-             PUSH mutez 0;
-             DUP 5;
-             SENDER;
-             PAIR;
-             SELF_ADDRESS;
-             PAIR;
-             TRANSFER_TOKENS;
-             CONS;
-             ITER { CONS };
-             DIP { DIG 6; DROP };
-             DUG 6;
-             NIL operation;
-             NIL operation;
-             DUP 9;
-             ITER { CONS };
-             DUP 5;
-             CONTRACT %getBalance (pair address (contract nat));
-             IF_NONE
-               { PUSH string "getBalance";
-                 PUSH string "ENTRY_NOT_FOUND";
+                 TRANSFER_TOKENS;
+                 CONS;
+                 ITER { CONS };
+                 DIP { DIG 6; DROP };
+                 DUG 6;
+                 NIL operation;
+                 NIL operation;
+                 DUP 9;
+                 ITER { CONS };
+                 DUP 5;
+                 CONTRACT %getBalance (pair address (contract nat));
+                 IF_NONE
+                   { PUSH string "getBalance";
+                     PUSH string "ENTRY_NOT_FOUND";
+                     PAIR;
+                     FAILWITH }
+                   {  };
+                 PUSH mutez 0;
+                 SELF_ADDRESS;
+                 CONTRACT %setCurBalAfter nat;
+                 IF_NONE
+                   { PUSH string "setCurBalAfter";
+                     PUSH string "ENTRY_NOT_FOUND";
+                     PAIR;
+                     FAILWITH }
+                   {  };
+                 SELF_ADDRESS;
                  PAIR;
-                 FAILWITH }
-               {  };
-             PUSH mutez 0;
-             SELF_ADDRESS;
-             CONTRACT %setCurBalAfter nat;
-             IF_NONE
-               { PUSH string "setCurBalAfter";
-                 PUSH string "ENTRY_NOT_FOUND";
-                 PAIR;
-                 FAILWITH }
-               {  };
-             SELF_ADDRESS;
-             PAIR;
-             TRANSFER_TOKENS;
-             CONS;
-             ITER { CONS };
-             DIP { DIG 6; DROP };
-             DUG 6;
-             DUP 5;
-             INT;
-             DUP 5;
-             INT;
-             SUB;
-             DIP { DIG 5; DROP };
-             DUG 5;
-             DROP;
-             PAIR 5;
-             DIG 1;
-             PAIR } };
+                 TRANSFER_TOKENS;
+                 CONS;
+                 ITER { CONS };
+                 DIP { DIG 6; DROP };
+                 DUG 6;
+                 DUP 5;
+                 INT;
+                 DUP 5;
+                 INT;
+                 SUB;
+                 DIP { DIG 5; DROP };
+                 DUG 5;
+                 DROP;
+                 PAIR 5;
+                 DIG 1;
+                 PAIR }
+               { NIL operation;
+                 NIL operation;
+                 DUP 9;
+                 ITER { CONS };
+                 SELF_ADDRESS;
+                 CONTRACT %setCurBalBefore nat;
+                 IF_NONE
+                   { PUSH string "setCurBalBefore";
+                     PUSH string "ENTRY_NOT_FOUND";
+                     PAIR;
+                     FAILWITH }
+                   {  };
+                 PUSH mutez 0;
+                 DUP 5;
+                 TRANSFER_TOKENS;
+                 CONS;
+                 ITER { CONS };
+                 DIP { DIG 6; DROP };
+                 DUG 6;
+                 PUSH nat 2;
+                 DUP 5;
+                 ADD;
+                 NIL operation;
+                 NIL operation;
+                 DUP 10;
+                 ITER { CONS };
+                 SELF_ADDRESS;
+                 CONTRACT %setCurBalAfter nat;
+                 IF_NONE
+                   { PUSH string "setCurBalAfter";
+                     PUSH string "ENTRY_NOT_FOUND";
+                     PAIR;
+                     FAILWITH }
+                   {  };
+                 PUSH mutez 0;
+                 DUP 5;
+                 TRANSFER_TOKENS;
+                 CONS;
+                 ITER { CONS };
+                 DIP { DIG 7; DROP };
+                 DUG 7;
+                 DROP 2;
+                 PAIR 5;
+                 DIG 1;
+                 PAIR } } };
 }
 
