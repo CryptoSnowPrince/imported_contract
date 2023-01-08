@@ -1,4 +1,5 @@
-archetype cake(factory: address, token: address, tokenBalBefore: nat, tokenBalAfter: nat, delta: int)
+archetype cake
+// archetype cake(factory: address, token: address, tokenBalBefore: nat, tokenBalAfter: nat, delta: int)
 
 // function onlyFactoryOwner(): bool {
 //     var factoryOwner: address ?= call_view<address>(factory, "getOwner", Unit) : "VIEW_OWNER_ERR";
@@ -6,48 +7,56 @@ archetype cake(factory: address, token: address, tokenBalBefore: nat, tokenBalAf
 //     return true
 // }
 
-entry setCurBalBefore(bal: nat) {
-    tokenBalBefore := bal
-}
+// entry setCurBalBefore(bal: nat) {
+//     tokenBalBefore := bal
+// }
 
-entry setCurBalAfter(bal: nat) {
-    tokenBalAfter := bal
-}
+// entry setCurBalAfter(bal: nat) {
+//     tokenBalAfter := bal
+// }
 
-entry action1(amount: nat) {
-    transfer 0tz to token call getBalance<address * contract<nat>>((self_address, self.setCurBalBefore));
-    transfer 0tz to token call %transfer<address * address * nat>((self_address, caller, amount));
-    transfer 0tz to token call getBalance<address * contract<nat>>((self_address, self.setCurBalAfter));
-    delta := tokenBalBefore - tokenBalAfter
-}
+// entry action1(amount: nat) {
+//     transfer 0tz to token call getBalance<address * contract<nat>>((self_address, self.setCurBalBefore));
+//     transfer 0tz to token call %transfer<address * address * nat>((self_address, caller, amount));
+//     transfer 0tz to token call getBalance<address * contract<nat>>((self_address, self.setCurBalAfter));
+//     delta := tokenBalBefore - tokenBalAfter
+// }
 
-entry action2(amount: nat) {
-    effect {
-        transfer 0tz to entry self.setCurBalBefore(amount);
-        const val = tokenBalBefore + 2;
-        transfer 0tz to entry self.setCurBalAfter(val)
-    }
-}
+// entry action2(amount: nat) {
+//     effect {
+//         transfer 0tz to entry self.setCurBalBefore(amount);
+//         const val = tokenBalBefore + 2;
+//         transfer 0tz to entry self.setCurBalAfter(val)
+//     }
+// }
 
 record Param {
     val1: int;
     val2: nat;
 }
 
-function transform(param: Param, val: int): Param {
-    // TODO
-    return param
-}
+variable params: list<Param> = [{1;1}]
 
-function call_trans(param: option<Param>, val: bool, val11: bool) : Param * Param {
-    const param_1 ?= param : "ERR";
-    if val11 then begin
-        if val then begin
-            return ((transform(param_1, 1), param_1))
-        end else begin
-            return ((transform(param_1, 0), param_1))
-        end
-    end;
+// function transform(param: Param, val: int): Param {
+//     // TODO
+//     return param
+// }
 
-    return ((param_1, param_1))
+// function call_trans(param: option<Param>, val: bool, val11: bool) : Param * Param {
+//     const param_1 ?= param : "ERR";
+//     if val11 then begin
+//         if val then begin
+//             return ((transform(param_1, 1), param_1))
+//         end else begin
+//             return ((transform(param_1, 0), param_1))
+//         end
+//     end;
+
+//     return ((param_1, param_1))
+// }
+
+entry setList(index: nat, val11: int, val22: nat) {
+    var val ?= nth(params, index) : "ERR";
+    val.val1 := val11;
+    val.val2 := val22
 }
