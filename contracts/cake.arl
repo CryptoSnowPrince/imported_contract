@@ -30,18 +30,6 @@ archetype cake
 //     }
 // }
 
-record Param {
-    val1: int;
-    val2: nat;
-}
-
-variable params: list<Param> = [{1;1}]
-
-asset infosss identified by id to big_map {
-    id: nat;
-    valinfosss: Param;
-}
-
 // function transform(param: Param, val: int): Param {
 //     // TODO
 //     return param
@@ -60,15 +48,32 @@ asset infosss identified by id to big_map {
 //     return ((param_1, param_1))
 // }
 
+record Param {
+    val1: int;
+    val2: nat;
+}
+
+variable params: list<Param> = [{1;1}]
+
+asset infosss identified by id to big_map {
+    id: nat;
+    valinfosss: Param;
+}
+
 entry setList(index: nat, val11: int, val22: nat) {
     var val ?= nth(params, index) : "ERR";
     val.val1 := val11;
     val.val2 := val22
 }
 
+entry setAsset(index: nat, val11: int, val22: nat) {
+    var val_param: Param = {val11; val22};
+    infosss[index].valinfosss := val_param
+}
+
 entry setAsset1(index: nat, val11: int, val22: nat) {
     var val_param: Param = {val11; val22};
-    infosss.update(index, {
+    infosss.add_update(index, {
         valinfosss := val_param
     })
 }
