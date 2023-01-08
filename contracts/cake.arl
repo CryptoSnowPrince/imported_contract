@@ -77,3 +77,8 @@ entry setAsset1(index: nat, val11: int, val22: nat) {
         valinfosss := val_param
     })
 }
+
+view getMax(index: nat): nat {
+    var val = 1 <<| index;
+    return val
+}
