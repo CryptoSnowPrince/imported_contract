@@ -82,3 +82,17 @@ view getMax(index: nat): nat {
     var val = 1 <<| index;
     return val
 }
+
+function hello(index: nat) : nat {
+    return index
+}
+
+
+view int_to_nat_test(index: int) : nat {
+    const val ?= int_to_nat(index) : "ERR";
+    return val
+}
+
+view abs_test(index: int) : nat {
+    return abs(index)
+}
