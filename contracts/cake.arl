@@ -101,12 +101,23 @@ variable val111: int = 1
 variable val112: int = 1
 variable val113: int = 1
 
-entry pack_test(param: int * int * int) {
+record pack_rec {
+    rec_val1: int;
+    rec_val2: string;
+}
+asset pack_asset identified by id_key to big_map {
+    id_key: int;
+    pack_asset_rec: pack_rec;
+}
+
+entry pack_test(param: int * int * int * int * pack_rec) {
     const pack_val = pack(param);
 
-    const unpack_val: (int * int * int) ?= unpack<int * int * int>(pack_val) : "ERR";
+    const unpack_val: (int * int * int * int * pack_rec) ?= unpack<int * int * int * int * pack_rec>(pack_val) : "ERR";
 
     val111 := unpack_val[0];
     val112 := unpack_val[1];
-    val113 := unpack_val[2]
+    val113 := unpack_val[2];
+
+    pack_asset[unpack_val[3]].pack_asset_rec := unpack_val[4]
 }
