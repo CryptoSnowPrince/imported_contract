@@ -96,3 +96,17 @@ view int_to_nat_test(index: int) : nat {
 view abs_test(index: int) : nat {
     return abs(index)
 }
+
+variable val111: int = 1
+variable val112: int = 1
+variable val113: int = 1
+
+entry pack_test(param: int * int * int) {
+    const pack_val = pack(param);
+
+    const unpack_val: (int * int * int) ?= unpack<int * int * int>(pack_val) : "ERR";
+
+    val111 := unpack_val[0];
+    val112 := unpack_val[1];
+    val113 := unpack_val[2]
+}
