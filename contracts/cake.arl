@@ -151,7 +151,7 @@ view test1(value: nat): nat {
 }
 
 view checkViewCall(value: nat): nat * nat {
-    do_require(value > 0, "hello");
+    do_require(value > 5, "hello");
     var retVal ?= call_view<nat>(self_address, "test1", value) : "ERR";
     var retVal1 = retVal + 5;
     return ((retVal, retVal1))
