@@ -147,10 +147,12 @@ entry test(value: nat) {
 }
 
 view test1(value: nat): nat {
-    value := value + 10;
-    return value
+    return (value + 3)
 }
 
-// function checkViewCall(value: nat): nat {
-//     initialize(value)
-// }
+view checkViewCall(value: nat): nat * nat {
+    do_require(value > 0, "hello");
+    var retVal ?= call_view<nat>(self_address, "test1", value) : "ERR";
+    var retVal1 = retVal + 5;
+    return ((retVal, retVal1))
+}
