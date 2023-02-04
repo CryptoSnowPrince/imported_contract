@@ -1,0 +1,62 @@
+archetype cakecall
+// (caller_val: address, source_val: address, self_val: address, caller_val_lib: address, source_val_lib: address, self_val_lib: address)
+
+// variable checkVal1: int = 0
+// variable checkVal2: int = 0
+
+// record rec {
+//     val1: int;
+//     val2: int;
+// }
+
+// asset data identified by id to big_map {
+//     id: nat;
+//     val: rec;
+// }
+
+// view checkViewCall(value: nat): nat * nat {
+//     do_require(value > 5, "hello");
+//     var retVal ?= call_view<nat>(self_address, "test1", value) : "ERR";
+//     var retVal1 = retVal + 5;
+//     return ((retVal, retVal1))
+// }
+
+// entry setCheckVals(data_id: nat, libAddr: address) {
+//     const retVal ?= call_view<int * int>(libAddr, "testLibBigMap", (data, data_id)) : "ERR_CALL_VIEW";
+//     checkVal1 := retVal[0];
+//     checkVal1 := retVal[1];
+// }
+
+// entry setData(data_id: nat, data_value: rec) {
+//     data[data_id].val := data_value
+// }
+
+// entry checkCallerSource(lib: address) {
+//     caller_val := caller;
+//     source_val := source;
+//     self_val := self_address;
+//     transfer 0tz to lib call checkCallerSource<unit>(());
+//     const retVal ?= call_view<address * address * address>(lib, "checkCallerSourceView", ());
+//     caller_val_lib := retVal[0];
+//     source_val_lib := retVal[1];
+//     self_val_lib :=  retVal[2];
+// }
+
+// view checkCallerSourceView(lib: address) : address * address * address * address * address * address {
+//     const retVal ?= call_view<address * address * address>(lib, "checkCallerSourceView", ());
+//     return ((caller, source, self_address, retVal[0], retVal[1], retVal[2]))
+// }
+
+variable entryVal: nat = 0
+variable entryValBefore: nat = 0
+variable entryValAfter: nat = 0
+
+entry setEntryVal(val: nat) {
+    entryVal := val
+}
+
+entry checkSetEntryVal(val: nat) {
+    entryValBefore := entryVal;
+    transfer 0tz to entry self.setEntryVal(val);
+    entryValAfter := entryVal;
+}

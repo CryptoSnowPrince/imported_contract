@@ -1,0 +1,32 @@
+archetype cakelibrary(caller_val: address, source_val: address, self_val: address)
+
+// record rec {
+//     val1: int;
+//     val2: int;
+// }
+
+// view test1(value: nat): nat {
+//     return (value + 3)
+// }
+
+// view checkViewCall(value: nat): nat * nat {
+//     do_require(value > 5, "hello");
+//     var retVal ?= call_view<nat>(self_address, "test1", value) : "ERR";
+//     var retVal1 = retVal + 5;
+//     return ((retVal, retVal1))
+// }
+
+// view testLibBigMap(map_data: big_map<nat, rec>, id: nat) : int * int {
+//     var val ?= map_data[id] : "ERROR_MAP_DATA";
+//     return ((val.val1, val.val2))
+// }
+
+entry checkCallerSource() {
+    caller_val := caller;
+    source_val := source;
+    self_val := self_address;
+}
+
+view checkCallerSourceView() : address * address * address {
+    return ((caller, source, self_address))
+}

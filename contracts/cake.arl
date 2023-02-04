@@ -1,4 +1,5 @@
 archetype cake
+
 // archetype cake(factory: address, token: address, tokenBalBefore: nat, tokenBalAfter: nat, delta: int)
 
 // function onlyFactoryOwner(): bool {
@@ -124,6 +125,7 @@ archetype cake
 
 variable b: nat = 0
 variable c: nat = 0
+variable cakeLib: address = KT1TjsMbSYo2v3XmLPSwTdT9YcGTVSXujGCx
 
 record rec {
     val1: int;
@@ -151,8 +153,50 @@ view test1(value: nat): nat {
 }
 
 view checkViewCall(value: nat): nat * nat {
-    do_require(value > 5, "hello");
-    var retVal ?= call_view<nat>(self_address, "test1", value) : "ERR";
+    do_require(value > 5, "hello1");
+    var retVal ?= call_view<nat>(cakeLib, "test1", value) : "ERR";
     var retVal1 = retVal + 5;
     return ((retVal, retVal1))
+}
+
+view checkViewCall1(value: nat): nat * nat {
+    do_require(value > 5, "hello1");
+    var retVal ?= call_view<nat>(cakeLib, "test1", value) : "ERR";
+    do_require(retVal > 10, "hello1");
+    var retVal1 = retVal + 5;
+    return ((retVal, retVal1))
+}
+
+variable entryRetVal: nat = 0
+variable entryRetVal1: nat = 0
+
+entry checkViewCallEntry(value: nat) {
+    do_require(value > 5, "checkViewCallEntry-1");
+    var retVal ?= call_view<nat>(cakeLib, "test1", value) : "ERR";
+    var retVal1 = retVal + 5;
+    entryRetVal := retVal;
+    entryRetVal1 := retVal1
+}
+
+entry checkViewCallEntry1(value: nat) {
+    do_require(value > 5, "checkViewCallEntry1-1");
+    var retVal ?= call_view<nat>(cakeLib, "test1", value) : "ERR";
+    do_require(retVal > 10, "checkViewCallEntry1-2");
+    var retVal1 = retVal + 5;
+    entryRetVal := retVal;
+    entryRetVal1 := retVal1
+}
+
+entry checkViewCallEntry2() {
+    do_require(entryRetVal > 5, "checkViewCallEntry2-1");
+    var retVal ?= call_view<nat>(cakeLib, "test1", entryRetVal) : "ERR";
+    do_require(retVal > 10, "checkViewCallEntry2-2");
+    var retVal1 = retVal + 5;
+    entryRetVal := retVal;
+    entryRetVal1 := retVal1
+}
+
+entry setValue(value: nat, value1: nat) {
+    entryRetVal := value;
+    entryRetVal1 := value1
 }
