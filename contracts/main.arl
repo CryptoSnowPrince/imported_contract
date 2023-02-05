@@ -1,27 +1,55 @@
-archetype main(const val1: nat, const val2: address, val3: nat, val4: address)
+archetype main
+// archetype main(const val1: nat, const val2: address, val3: nat, val4: address)
 
-import other_contract from "./contracts/other/view.tz"
+// import other_contract from "./contracts/other/view.tz"
 
-variable res : int = 0
-variable res1 : int = 0
+variable xx : address = @tz1afKmEFo11mpXr4JdodJDTXYLfw7GTFbak
+variable yy : int = 0
+variable zz : nat = 0
 
-entry check (a : address) {
-  const v : nat ?= other_contract(a).getN(Unit) : "VIEW_ERROR";
-  res := v
+enum param = 
+| x<address>
+| y<int>
+| z<unit>
+
+entry optionParam (in_param: param, in_param_2: int) {
+  match in_param with
+  | x(decode_param) -> 
+    xx := decode_param
+  | y(decode_param) -> 
+    yy := decode_param
+  | z(decode_param) -> 
+    zz := zz + 1
+  end;
 }
 
-entry inc () {
-  res += 1;
+entry orParam(in_param: or<nat, address>, in_param_2: int) {
+  // match in_param with
+  // | left(in_nat) -> zz := in_nat
+  // | right(in_addr) -> xx := in_addr
+  // end
 }
 
-entry inc1 () {
-  res1 += 1;
-}
+// variable res : int = 0
+// variable res1 : int = 0
 
-entry dec () {
-  res -= 1;
-}
+// entry check (a : address) {
+//   const v : nat ?= other_contract(a).getN(Unit) : "VIEW_ERROR";
+//   res := v
+// }
 
-entry dec1 () {
-  res1 -= 1;
-}
+// entry inc () {
+//   res += 1;
+// }
+
+// entry inc1 () {
+//   res1 += 1;
+// }
+
+// entry dec () {
+//   res -= 1;
+// }
+
+// entry dec1 () {
+//   res1 -= 1;
+// }
