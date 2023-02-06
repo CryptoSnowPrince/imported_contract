@@ -4,7 +4,7 @@ archetype main
 // import other_contract from "./contracts/other/view.tz"
 
 enum token_type = 
-| %tez<unit>
+| tez_token<unit>
 | fa12<address>
 | fa20<address * nat>
 
@@ -50,23 +50,23 @@ enum token_type =
 **/
 view tokenCompare(tokenA: token_type, tokenB: token_type) : int {
   match tokenA with
-  | %tez(tez_A_type) -> begin
+  | tez_token(tez_A_type) -> begin
     match tokenB with
-    | %tez(tez_B_type) -> return 2
+    | tez_token(tez_B_type) -> return 2
     | fa12(fa12_B_type) -> return 1
     | fa20(fa20_B_type_addres, fa20_B_type_id) -> return 1
     end
   end
   | fa12(fa12_A_type) -> begin
     match tokenB with
-    | %tez(tez_B_type) -> return (-1)
+    | tez_token(tez_B_type) -> return (-1)
     | fa12(fa12_B_type) -> return (fa12_A_type <=> fa12_B_type)
     | fa20(fa20_B_type_addres, fa20_B_type_id) -> return 1
     end
   end
   | fa20(fa20_A_type_addres, fa20_A_type_id) -> begin
     match tokenB with
-    | %tez(tez_B_type) -> return (-1)
+    | tez_token(tez_B_type) -> return (-1)
     | fa12(fa12_B_type) -> return (-1)
     | fa20(fa20_B_type_addres, fa20_B_type_id) -> begin
       var ret: int = (fa20_A_type_addres <=> fa20_B_type_addres);
