@@ -131,3 +131,44 @@ view tokenCompare(tokenA: token_type, tokenB: token_type) : int {
 // entry dec1 () {
 //   res1 -= 1;
 // }
+
+/**
+** Returns type of token:
+**      0 when tez
+**      1 when fa12
+**      2 when fa20
+**/
+function getTokenType(token: token_type) : int {
+    match token with
+    | tez_token(tez_type) -> return 0
+    | fa12(fa12_type) -> return 1
+    | fa20(fa20_type_address, fa20_type_id) -> return 2
+    end
+}
+
+record transfer_destination {
+  to_dest           : address;
+  token_id_dest     : nat;
+  token_amount_dest : nat
+} as ((%to_, (token_id, amount)))
+
+record transfer_param {
+  tp_from : address;
+  tp_txs  : list<transfer_destination>;
+} as ((%from_, %txs))
+
+entry tokenTransfer(token: token_type, recipient: address, amount: nat) {
+    match token with
+    | tez_token(tez_type) -> begin
+        const tzAmount: tez = (amount * 1tz) div 1_000_000;
+        transfer tzAmount to recipient
+    end
+    | fa12(fa12_type) -> begin
+        transfer 0tz to fa12_type call %transfer<address * address * nat>((self_address, recipient, amount));
+    end
+    | fa20(fa20_type_address, fa20_type_id) -> begin
+        const txs: list<transfer_param> = [{self_address; [{recipient; fa20_type_id; amount}]}];
+        transfer 0tz to fa20_type_address call %transfer<list<transfer_param>>(txs);
+    end
+    end
+}
