@@ -70,7 +70,7 @@ view tokenCompare(tokenA: token_type, tokenB: token_type) : int {
     | fa12(fa12_B_type) -> return (-1)
     | fa20(fa20_B_type_addres, fa20_B_type_id) -> begin
       var ret: int = (fa20_A_type_addres <=> fa20_B_type_addres);
-      if ret = 0 then ret := (fa20_A_type_id <=> fa20_A_type_id);
+      if ret = 0 then ret := (fa20_A_type_id <=> fa20_B_type_id);
       return ret
     end
     end
