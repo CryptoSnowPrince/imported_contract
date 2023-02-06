@@ -1,0 +1,6 @@
+archetype pool(token0: token_type, token1: token_type, owner: address)
+
+enum token_type = 
+| tez_token<unit>
+| fa12<address>
+| fa20<address * nat>

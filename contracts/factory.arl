@@ -1,25 +1,29 @@
 // owner = caller
 archetype factory(owner: address)
 
-import cake from "./contracts/other/cake.tz"
+import pool from "./contracts/other/pool.tz"
 
-entry createPool(token: address) {
-    effect {
-        const amount : tez = 0tz;
-        const storage_init : (address * address * nat * nat * int) = (self_address, token, 0, 0, 0);
-        const op_addr : (operation * address) = create_contract(cake, none, amount, storage_init);
-        operations := [op_addr[0]];
-    }
+enum token_type = 
+| tez_token<unit>
+| fa12<address>
+| fa20<address * nat>
+
+variable poolAddress: address = @tz1afKmEFo11mpXr4JdodJDTXYLfw7GTFbak
+
+function convert(x : token_type) : or<unit, or<address, (address * nat)>> {
+    return (
+        match x with
+        | tez_token x -> left<unit, or<address, (address * nat)>>(Unit)
+        | fa12 x -> right<unit, or<address, (address * nat)>>(left<address, (address * nat)>(x))
+        | fa20 (x, y) -> right<unit, or<address, (address * nat)>>(right<address, (address * nat)>((x, y)))
+        end
+    )
 }
 
-entry setOwner(owner_: address) {
-    called by owner
-
-    effect {
-        owner := owner_
-    }
-}
-
-view getOwner(): address {
-    return owner
+entry createPool(tokenA: token_type, tokenB: token_type) {
+    const amount : tez = 0tz;
+    const storage_init : (or<unit, or<address, (address * nat)>> * or<unit, or<address, (address * nat)>> * address) = (convert(tokenA), convert(tokenB), self_address);
+    const op_addr : (operation * address) = create_contract(pool, none, amount, storage_init);
+    operations := [op_addr[0]];
+    poolAddress := op_addr[1]
 }
