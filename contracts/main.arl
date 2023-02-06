@@ -172,3 +172,5 @@ entry tokenTransfer(token: token_type, recipient: address, amount: nat) {
     end
     end
 }
+
+entry default() {}
