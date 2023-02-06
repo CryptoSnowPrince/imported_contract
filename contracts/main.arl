@@ -78,28 +78,28 @@ view tokenCompare(tokenA: token_type, tokenB: token_type) : int {
   end
 }
 
-variable xx : address = @tz1afKmEFo11mpXr4JdodJDTXYLfw7GTFbak
-variable yy : int = 0
-variable zz : nat = 0
+// variable xx : address = @tz1afKmEFo11mpXr4JdodJDTXYLfw7GTFbak
+// variable yy : int = 0
+// variable zz : nat = 0
 
-enum param = 
-| x<address>
-| y<int>
-| z<unit>
+// enum param = 
+// | x<address>
+// | y<int>
+// | z<unit>
 
-entry optionParam (in_param: param, in_param_2: int) {
-  match in_param with
-  | x(decode_param) -> 
-    xx := decode_param
-  | y(decode_param) -> 
-    yy := decode_param
-  | z(decode_param) -> 
-    zz := zz + 1
-  end;
-  do_require(in_param_2 > 0, ("in_param_2:", in_param_2))
-}
+// entry optionParam (in_param: param, in_param_2: int) {
+//   match in_param with
+//   | x(decode_param) -> 
+//     xx := decode_param
+//   | y(decode_param) -> 
+//     yy := decode_param
+//   | z(decode_param) -> 
+//     zz := zz + 1
+//   end;
+//   do_require(in_param_2 > 0, ("in_param_2:", in_param_2))
+// }
 
-entry default () {}
+// entry default () {}
 
 // entry orParam(in_param: or<nat, address>, in_param_2: int) {
 //   // match in_param with
