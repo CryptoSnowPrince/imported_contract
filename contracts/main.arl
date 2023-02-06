@@ -3,32 +3,107 @@ archetype main
 
 // import other_contract from "./contracts/other/view.tz"
 
-variable xx : address = @tz1afKmEFo11mpXr4JdodJDTXYLfw7GTFbak
-variable yy : int = 0
-variable zz : nat = 0
+enum token_type = 
+| %tez<unit>
+| fa12<address>
+| fa20<address * nat>
 
-enum param = 
-| x<address>
-| y<int>
-| z<unit>
-
-entry optionParam (in_param: param, in_param_2: int) {
-  match in_param with
-  | x(decode_param) -> 
-    xx := decode_param
-  | y(decode_param) -> 
-    yy := decode_param
-  | z(decode_param) -> 
-    zz := zz + 1
-  end;
+/**
+** Valid compare cases:
+**     tez <=> fa12
+**     tez <=> fa20
+**     fa12 <=> fa12
+**     fa12 <=> fa20
+**     fa20 <=> fa20
+**
+** Invalid compare cases:
+**     tez <=> tez
+**
+** Results of compare:
+**        A : B
+**      tez : tez  => 2
+**      tez : fa12 => 1
+**      tez : fa20 => 1
+**
+**     fa12 : tez  => -1
+**     fa12 : fa12 => -1, 0, 1
+**     fa12 : fa20 => 1
+**
+**     fa20 : tez  => -1
+**     fa20 : fa12 => -1
+**     fa20 : fa20 => -1, 0, 1
+**
+** Rule for FA20:
+**     token_address < token_address => -1
+**     token_address = token_address => 
+**          token_id < token_id => -1
+**          token_id = token_id =>  0
+**          token_id > token_id =>  1
+**     token_address > token_address =>  1
+**
+** Rule:
+**     -1 when tokenA < tokenB
+**      0 when tokenA = tokenB
+**      1 when tokenA > tokenB
+**      2 when Invalid Compare
+**
+**/
+view tokenCompare(tokenA: token_type, tokenB: token_type) : int {
+  match tokenA with
+  | %tez(tez_A_type) -> begin
+    match tokenB with
+    | %tez(tez_B_type) -> return 2
+    | fa12(fa12_B_type) -> return 1
+    | fa20(fa20_B_type_addres, fa20_B_type_id) -> return 1
+    end
+  end
+  | fa12(fa12_A_type) -> begin
+    match tokenB with
+    | %tez(tez_B_type) -> return (-1)
+    | fa12(fa12_B_type) -> return (fa12_A_type <=> fa12_B_type)
+    | fa20(fa20_B_type_addres, fa20_B_type_id) -> return 1
+    end
+  end
+  | fa20(fa20_A_type_addres, fa20_A_type_id) -> begin
+    match tokenB with
+    | %tez(tez_B_type) -> return (-1)
+    | fa12(fa12_B_type) -> return (-1)
+    | fa20(fa20_B_type_addres, fa20_B_type_id) -> begin
+      var ret: int = (fa20_A_type_addres <=> fa20_B_type_addres);
+      if ret = 0 then ret := (fa20_A_type_id <=> fa20_A_type_id);
+      return ret
+    end
+    end
+  end
+  end
 }
 
-entry orParam(in_param: or<nat, address>, in_param_2: int) {
-  // match in_param with
-  // | left(in_nat) -> zz := in_nat
-  // | right(in_addr) -> xx := in_addr
-  // end
-}
+// variable xx : address = @tz1afKmEFo11mpXr4JdodJDTXYLfw7GTFbak
+// variable yy : int = 0
+// variable zz : nat = 0
+
+// enum param = 
+// | x<address>
+// | y<int>
+// | z<unit>
+
+// entry optionParam (in_param: param, in_param_2: int) {
+//   match in_param with
+//   | x(decode_param) -> 
+//     xx := decode_param
+//   | y(decode_param) -> 
+//     yy := decode_param
+//   | z(decode_param) -> 
+//     zz := zz + 1
+//   end;
+// }
+
+// entry orParam(in_param: or<nat, address>, in_param_2: int) {
+//   // match in_param with
+//   // | left(in_nat) -> zz := in_nat
+//   // | right(in_addr) -> xx := in_addr
+//   // end
+// }
 
 // variable res : int = 0
 // variable res1 : int = 0
