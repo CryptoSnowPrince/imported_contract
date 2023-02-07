@@ -4,3 +4,9 @@ enum token_type =
 | tez_token<unit>
 | fa12<address>
 | fa20<address * nat>
+
+entry hello() {
+    owner := self_address
+}
+
+entry default() {}
